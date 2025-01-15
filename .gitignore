@@ -1,0 +1,21 @@
+# Token cache
+geni_token.json
+profiles.json
+processed_profiles.json
+
+# Byte-compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Cache files
+.pytest_cache
+__pycache__/
+
+# Virtual environment
+my_env/
+
+# IDE and Editor Files
+.vscode/
+*.idea/
+*.DS_Store
