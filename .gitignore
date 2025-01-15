@@ -1,5 +1,8 @@
-# Token cache
-geni_token.json
+# API key file
+geni_api_key.cfg
+
+# Cache / aux temporary files
+geni_token.tmp
 profiles.json
 processed_profiles.json
 
