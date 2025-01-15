@@ -1,0 +1,2 @@
+requests==2.32.3
+transliterate==1.10.2
