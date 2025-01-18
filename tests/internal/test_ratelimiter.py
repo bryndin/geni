@@ -3,7 +3,7 @@ from unittest.mock import Mock, call, patch
 
 import pytest
 
-from geni.ratelimiter import RateLimiter
+from geni.internal.ratelimiter import RateLimiter
 
 
 def test_initialization():

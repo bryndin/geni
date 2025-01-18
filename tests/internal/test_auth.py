@@ -3,7 +3,7 @@ from unittest.mock import patch, mock_open
 
 import pytest
 
-from geni.auth import Auth, AuthError
+from geni.internal.auth import Auth, AuthError
 
 
 DUMMY_TIME = 1609459200  # Mocked time (Jan 1, 2021)
