@@ -1,5 +1,5 @@
 # API key file
-geni_api_key.cfg
+geni_api.key
 
 # Cache / aux temporary files
 geni_token.tmp
