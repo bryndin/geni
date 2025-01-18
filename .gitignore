@@ -11,6 +11,9 @@ processed_profiles.json
 *.pyo
 *.pyd
 
+# lib egg
+*.egg-info
+
 # Cache files
 .pytest_cache
 __pycache__/
