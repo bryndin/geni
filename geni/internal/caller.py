@@ -29,16 +29,18 @@ class Caller:
         """
         Preprocess params before executing request.
         """
-        # Flatten dicts passed inside params
-        processed_params = {}
-        for k, v in params.items():
-            if isinstance(v, dict):
-                processed_params.update(flatten_dict(v, parent_key=k))
-            else:
-                processed_params[k] = v
+        processed_params = None
+        if params is not None:
+            # Flatten dicts passed inside params
+            processed_params = {}
+            for k, v in params.items():
+                if isinstance(v, dict):
+                    processed_params.update(flatten_dict(v, parent_key=k))
+                else:
+                    processed_params[k] = v
 
-        # Remove None values
-        processed_params = remove_none(processed_params)
+            # Remove None values
+            processed_params = remove_none(processed_params)
 
         return self._raw_call(url, headers=headers, params=processed_params, method=method)
 
@@ -49,8 +51,6 @@ class Caller:
         headers = headers or {}
         if self.__HEADER_AUTH not in headers:
           headers[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
-
-        params = params or {}
 
         self._ratelimiter.wait()
         response = requests.request(method, url, headers=headers, params=params)

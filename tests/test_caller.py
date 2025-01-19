@@ -74,20 +74,33 @@ def test___init__():
     assert caller._auth._api_key == "test_key"
 
 
-def test__call():
+
+@pytest.mark.parametrize(
+    "url, kwargs, "
+    "expect_method, expect_headers, expect_params",
+    [
+        pytest.param("https://api.com/a", {},
+                     "get", None, None,
+                     id="url only => all optional arguments are None"),
+        pytest.param("https://api.com/b", {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
+                     "post", {"Custom-Header": "value"}, {"k": "v"},
+                     id="post with headers and params => optional arguments are passed as is"),
+    ]
+)
+def test__call(url, kwargs, expect_method, expect_headers, expect_params):
     expected_response = json.dumps("test_response")
 
     with patch.object(Caller, "_raw_call", return_value=expected_response) as mock___call:
         caller = Caller(api_key="test_key")
 
-        url = "test_url"
-        headers = {"test_header": "test_value"}
-        params = {"p": "v", "none": None, "dict": {"key": "val"}}
-        method = "test_method"
-        response = caller._call(url, headers=headers, params=params, method=method)
+        # url = "test_url"
+        # headers = {"test_header": "test_value"}
+        # params = {"p": "v", "none": None, "dict": {"key": "val"}}
+        # method = "test_method"
+        response = caller._call(url, **dict(kwargs))
 
         assert response == expected_response
-        mock___call.assert_called_once_with(url, headers=headers, params={"p": "v", "dict[key]": "val"}, method=method)
+        mock___call.assert_called_once_with(url, headers=expect_headers, params=expect_params, method=expect_method)
 
 
 @pytest.mark.parametrize(
@@ -97,11 +110,15 @@ def test__call():
     [
         pytest.param("https://api.com/a", {},
                      "TOKEN_A",
-                     "get", {"Authorization": "Bearer TOKEN_A"}, {},
-                     id="get with no headers no params => success"),
-        pytest.param("https://api.com/b", {"headers": {"Custom-Header": "value"}, "params": {"key": "value"}, "method": "post"},
+                     "get", {"Authorization": "Bearer TOKEN_A"}, None,
+                     id="url only => success"),
+        pytest.param("https://api.com/a", {"headers": {"Authorization": "Bearer EXISTING_HEADER"}},
+                     "TOKEN_A",
+                     "get", {"Authorization": "Bearer EXISTING_HEADER"}, None,
+                     id="pre-existing auth header => original auth header is kept"),
+        pytest.param("https://api.com/b", {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
                      "TOKEN_B",
-                     "post", {"Custom-Header": "value", "Authorization": "Bearer TOKEN_B"}, {"key": "value"},
+                     "post", {"Custom-Header": "value", "Authorization": "Bearer TOKEN_B"}, {"k": "v"},
                      id="post with headers and params => success"),
     ]
 )
