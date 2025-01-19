@@ -2,12 +2,14 @@ import pytest
 
 from geni.geni import Geni
 from geni.profile import Profile
+from geni.stats import Stats
 from geni.user import User
 
 
 _classes = {
     "profile": Profile,
-    "user": User
+    "stats": Stats,
+    "user": User,
 }
 
 
