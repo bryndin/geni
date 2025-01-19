@@ -32,8 +32,8 @@ class RateLimiter:
         """
         Update the rate limit settings based on the instructions from reply headers.
         """
-        self.limit = headers.get("X-API-Rate-Limit", self.limit)
-        self.remaining = headers.get("X-API-Rate-Remaining", 0)
-        rate_window = headers.get("X-API-Rate-Window", self.window)
+        self.limit = int(headers.get("X-API-Rate-Limit", self.limit))
+        self.remaining = int(headers.get("X-API-Rate-Remaining", 0))
+        rate_window = int(headers.get("X-API-Rate-Window", self.window))
 
         self.queue.append(time.time() + rate_window)

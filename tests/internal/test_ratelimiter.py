@@ -41,19 +41,21 @@ def test_wait(limit, remaining, queue, mock_time, expect_sleep_calls):
 
 
 @pytest.mark.parametrize(
-    "headers, limit, window, queue, current_time, expect_limit, expect_remaining, expect_queue",
+    "headers, "
+    "limit, window, queue, current_time, "
+    "expect_limit, expect_remaining, expect_queue",
     [
-        # correct headers => update
-        (
-            {"X-API-Rate-Limit": 100, "X-API-Rate-Remaining": 50, "X-API-Rate-Window": 60},
+        pytest.param(
+            {"X-API-Rate-Limit": "100", "X-API-Rate-Remaining": "50", "X-API-Rate-Window": "60"},
             1, 2, [600], 1000,
             100, 50, [600, 1000+60],
+            id="correct headers => update",
         ),
-        # missing headers => keep defaults
-        (
+        pytest.param(
             {},
             10, 20, [], 10000,
             10, 0, [10000+20],
+            id="missing headers => keep defaults",
         ),
     ]
 )
@@ -64,6 +66,7 @@ def test_update(headers, limit, window, queue, current_time, expect_limit, expec
         rate_limiter.limit = limit
         rate_limiter.window = window
         rate_limiter.queue = deque(queue)
+
         rate_limiter.update(headers)
 
         assert rate_limiter.limit == expect_limit
