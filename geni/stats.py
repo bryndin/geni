@@ -13,6 +13,8 @@ class Stats(Caller):
 
         :return: A dictionary containing the site's statistics.
         :rtype: dict
+        **Dictionary Keys:**
+            * **stats**: List of available statistics (list[dict])
         """
         url = "https://www.geni.com/api/stats"
 
@@ -22,6 +24,12 @@ class Stats(Caller):
     def world_family_tree(self):
         """
          Returns info about the world family tree.
+
+        :return: A dictionary containing information about the World Family Tree.
+        :rtype: dict
+        **Dictionary Keys:**
+            * **formatted_size**: Formatted number of profiles in the World Family Tree (str)
+            * **size**: Number of profiles in the World Family Tree (int)
         """
         url = "https://www.geni.com/api/stats/world-family-tree"
 
