@@ -2,7 +2,7 @@ import pytest
 
 from geni.profile import Profile
 
-from tests.fixtures import dummyResponse, noneProfile, sampleProfile
+from tests.internal.fixtures import dummyResponse, noneProfile, sampleProfile
 from tests.internal.helper import check_api_method
 
 

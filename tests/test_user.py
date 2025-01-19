@@ -2,7 +2,7 @@ import pytest
 
 from geni.user import User
 
-from tests.fixtures import dummyResponse #TODO: decide where to store fixtures, include here? keep in own file in internal?
+from tests.internal.fixtures import dummyResponse
 from tests.internal.helper import check_api_method
 
 
