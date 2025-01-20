@@ -49,7 +49,7 @@ def test___init__(kwargs, load_return, expect_exception):
             assert auth._expires_at is None
 
             if load_return:
-                mock_load_secrets.assert_called_once_with(kwargs.get("api_file", "geni_api_key.cfg"))
+                mock_load_secrets.assert_called_once_with(kwargs.get("api_file", "geni_api.key"))
 
 
 @pytest.mark.parametrize(

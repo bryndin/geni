@@ -4,7 +4,7 @@ import re
 import time
 
 
-API_KEY_FILE = "geni_api_key.cfg"   # File to store API key
+API_KEY_FILE = "geni_api.key"   # File to store API key
 TOKEN_FILE = "geni_token.tmp"       # File to store tokens
 
 
