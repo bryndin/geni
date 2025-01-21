@@ -4,11 +4,12 @@ import time
 
 logger = logging.getLogger(__name__)
 
+
 class RateLimiter:
     def __init__(self, limit=1, window=10):
         self.limit = limit
-        self.window = window      
-        self.remaining = -1  
+        self.window = window
+        self.remaining = -1
         self.queue = deque()
 
     def wait(self):

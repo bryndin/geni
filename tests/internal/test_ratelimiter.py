@@ -32,7 +32,7 @@ def test_wait(limit, remaining, queue, mock_time, expect_sleep_calls):
     rate_limiter.queue = deque(queue)
 
     with patch("time.time", new=mock_time), \
-         patch("time.sleep") as mock_sleep:
+            patch("time.sleep") as mock_sleep:
         rate_limiter.wait()
         if expect_sleep_calls is not None:
             mock_sleep.assert_has_calls([call(x) for x in expect_sleep_calls])
@@ -48,20 +48,20 @@ def test_wait(limit, remaining, queue, mock_time, expect_sleep_calls):
         pytest.param(
             {"X-API-Rate-Limit": "100", "X-API-Rate-Remaining": "50", "X-API-Rate-Window": "60"},
             1, 2, [600], 1000,
-            100, 50, [600, 1000+60],
+            100, 50, [600, 1000 + 60],
             id="correct headers => update",
         ),
         pytest.param(
             {},
             10, 20, [], 10000,
-            10, 0, [10000+20],
+            10, 0, [10000 + 20],
             id="missing headers => keep defaults",
         ),
     ]
 )
 def test_update(headers, limit, window, queue, current_time, expect_limit, expect_remaining, expect_queue):
     with patch("time.time", return_value=current_time) as mock_time, \
-         patch("time.sleep"):
+            patch("time.sleep"):
         rate_limiter = RateLimiter()
         rate_limiter.limit = limit
         rate_limiter.window = window

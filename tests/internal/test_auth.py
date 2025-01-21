@@ -5,7 +5,6 @@ import pytest
 
 from geni.internal.auth import Auth, AuthError
 
-
 DUMMY_TIME = 1609459200  # Mocked time (Jan 1, 2021)
 DUMMY_FUTURE_TIME = DUMMY_TIME + 3600
 DUMMY_PAST_TIME = DUMMY_TIME - 600
@@ -17,7 +16,8 @@ DUMMY_TOKEN = "dummy_token"
     "kwargs, load_return, expect_exception",
     [
         # pass all kwargs => no load, no exception
-        ({"api_key": DUMMY_API_KEY, "api_file": "mock_api_file", "token_file": "mock_token_file", "save_token": False}, None, None),
+        ({"api_key": DUMMY_API_KEY, "api_file": "mock_api_file", "token_file": "mock_token_file", "save_token": False},
+         None, None),
         # pass only api_key => no load, no exception
         ({"api_key": DUMMY_API_KEY}, None, None),
         # pass only api_file => load, no exception
@@ -55,23 +55,25 @@ def test___init__(kwargs, load_return, expect_exception):
 @pytest.mark.parametrize(
     "initial, load, generate, save, expect",
     [
-         # unexpired token already exists => pass
+        # unexpired token already exists => pass
         ((DUMMY_TOKEN, DUMMY_FUTURE_TIME), (None, None), (None, None), False, (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
         # no previous token exists => load
         ((None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), (None, None), False, (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
         # no previous token exists and load fails => generate and don't save
         ((None, None), (None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), False, (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
         # expired token => generate and don't save
-        ((DUMMY_TOKEN, DUMMY_PAST_TIME), (None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), False, (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
+        ((DUMMY_TOKEN, DUMMY_PAST_TIME), (None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), False,
+         (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
         # expired token => generate and save
-        ((DUMMY_TOKEN, DUMMY_PAST_TIME), (None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), True, (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
+        ((DUMMY_TOKEN, DUMMY_PAST_TIME), (None, None), (DUMMY_TOKEN, DUMMY_FUTURE_TIME), True,
+         (DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
     ],
 )
 def test_access_token(initial, load, generate, save, expect):
     with patch.object(Auth, "_load") as mock_load, \
-         patch.object(Auth, "_generate") as mock_generate, \
-         patch.object(Auth, "_save") as mock_save, \
-         patch("time.time", return_value=DUMMY_TIME):
+            patch.object(Auth, "_generate") as mock_generate, \
+            patch.object(Auth, "_save") as mock_save, \
+            patch("time.time", return_value=DUMMY_TIME):
 
         auth = Auth(api_key=DUMMY_API_KEY, save_token=save)
 
@@ -103,6 +105,7 @@ def test_access_token(initial, load, generate, save, expect):
         else:
             mock_save.assert_not_called()
 
+
 @pytest.mark.parametrize(
     "file_content, path_exists, expected_api_key",
     [
@@ -118,14 +121,14 @@ def test_access_token(initial, load, generate, save, expect):
 )
 def test_load_secrets(file_content, path_exists, expected_api_key):
     with patch("builtins.open", mock_open(read_data=file_content)) as mocked_file, \
-         patch("os.path.exists", return_value=path_exists):
-            api_key = Auth._load_secrets("dummy_api_file.cfg")
+            patch("os.path.exists", return_value=path_exists):
+        api_key = Auth._load_secrets("dummy_api_file.cfg")
 
-            assert api_key == expected_api_key
-            if path_exists:
-                mocked_file.assert_called_once_with("dummy_api_file.cfg", "r")
-            else:
-                mocked_file.assert_not_called()
+        assert api_key == expected_api_key
+        if path_exists:
+            mocked_file.assert_called_once_with("dummy_api_file.cfg", "r")
+        else:
+            mocked_file.assert_not_called()
 
 
 @pytest.mark.parametrize(
@@ -150,6 +153,7 @@ def test_save(access_token, expires_at):
         }
         calls = [call[0][0] for call in mocked_file().write.call_args_list]
         assert ''.join(calls) == json.dumps(expected_data)
+
 
 @pytest.mark.parametrize(
     "file_content, path_exists, expect_access_token, expect_expires_at, expect_exception",
@@ -207,7 +211,7 @@ def test_generate(redirect_url, expect_access_token, expect_expires_at, expect_e
     auth = Auth(api_key="dummy-api-key")
 
     with patch("builtins.input", return_value=redirect_url), \
-         patch("time.time", return_value=1000):
+            patch("time.time", return_value=1000):
         if expect_exception is not None:
             with pytest.raises(AuthError):
                 auth._generate()

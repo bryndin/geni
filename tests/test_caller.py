@@ -74,7 +74,6 @@ def test___init__():
     assert caller._auth._api_key == "test_key"
 
 
-
 @pytest.mark.parametrize(
     "url, kwargs, "
     "expect_method, expect_headers, expect_params",
@@ -82,7 +81,8 @@ def test___init__():
         pytest.param("https://api.com/a", {},
                      "get", None, None,
                      id="url only => all optional arguments are None"),
-        pytest.param("https://api.com/b", {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
+        pytest.param("https://api.com/b",
+                     {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
                      "post", {"Custom-Header": "value"}, {"k": "v"},
                      id="post with headers and params => optional arguments are passed as is"),
     ]
@@ -116,7 +116,8 @@ def test__call(url, kwargs, expect_method, expect_headers, expect_params):
                      "TOKEN_A",
                      "get", {"Authorization": "Bearer EXISTING_HEADER"}, None,
                      id="pre-existing auth header => original auth header is kept"),
-        pytest.param("https://api.com/b", {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
+        pytest.param("https://api.com/b",
+                     {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
                      "TOKEN_B",
                      "post", {"Custom-Header": "value", "Authorization": "Bearer TOKEN_B"}, {"k": "v"},
                      id="post with headers and params => success"),
@@ -132,7 +133,6 @@ def test__raw_call(url, kwargs, access_token, expect_method, expect_headers, exp
             patch.object(RateLimiter, "wait") as mock_wait, \
             patch.object(RateLimiter, "update") as mock_update, \
             patch.object(Auth, "access_token", new_callable=mock_access_token):
-
         caller = Caller(api_key="dummy-api-key")
         response = caller._raw_call(url, **dict(kwargs))
 

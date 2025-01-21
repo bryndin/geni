@@ -8,6 +8,7 @@ def remove_none(d):
     """Remove None values from a dictionary."""
     return {k: v for k, v in d.items() if v is not None}
 
+
 def flatten_dict(d, parent_key=""):
     items = {}
     for k, v in d.items():
@@ -18,12 +19,13 @@ def flatten_dict(d, parent_key=""):
             items[new_key] = v
     return items
 
+
 class Caller:
     __HEADER_AUTH = "Authorization"
 
     def __init__(self, api_key=None):
         self._auth = Auth(api_key)
-        self._ratelimiter=RateLimiter()
+        self._ratelimiter = RateLimiter()
 
     def _call(self, url, headers=None, params=None, method="get"):
         """
@@ -50,7 +52,7 @@ class Caller:
         """
         headers = headers or {}
         if self.__HEADER_AUTH not in headers:
-          headers[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
+            headers[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
 
         self._ratelimiter.wait()
         response = requests.request(method, url, headers=headers, params=params)

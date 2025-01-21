@@ -3,9 +3,8 @@ import os
 import re
 import time
 
-
-API_KEY_FILE = "geni_api.key"   # File to store API key
-TOKEN_FILE = "geni_token.tmp"       # File to store tokens
+API_KEY_FILE = "geni_api.key"  # File to store API key
+TOKEN_FILE = "geni_token.tmp"  # File to store tokens
 
 
 class AuthError(Exception):
@@ -113,7 +112,7 @@ class Auth:
             "&response_type=token&display=desktop"
         )
 
-        #TODO: Make it more visible?
+        # TODO: Make it more visible?
         print("Visit this URL to authorize the application:")
         print(auth_url)
         redirect_url = input("Paste the redirect URL (from the address bar): ")
@@ -122,7 +121,7 @@ class Auth:
             match = re.search(r"access_token%3D(.*)%26expires_in%3D(.*)", redirect_url)
             if not match or not match.group(1) or not match.group(2) or not match.group(2).isdigit():
                 raise AuthError("Invalid redirect URL. Did you copy one from the address bar?")
-            
+
             self._access_token = match.group(1)
             self._expires_at = time.time() + int(match.group(2))
         else:

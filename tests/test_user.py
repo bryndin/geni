@@ -12,8 +12,8 @@ from tests.internal.helper import check_api_method
     "expect_response, expect_kwargs, expect_exception",
     [
         pytest.param(
-            [], {}, 
-            dummyResponse, None, 
+            [], {},
+            dummyResponse, None,
             dummyResponse.json(), {"params": {"fields": None, "page": None, "per_page": None}}, None,
             id="no params => success",
         ),
@@ -30,7 +30,7 @@ from tests.internal.helper import check_api_method
             id="pass sample params as args => success",
         ),
         pytest.param(
-            [], {"fields": ["name", "email"], "page": 2,  "per_page": 50},
+            [], {"fields": ["name", "email"], "page": 2, "per_page": 50},
             dummyResponse, None,
             dummyResponse.json(), {"params": {"fields": ["name", "email"], "page": 2, "per_page": 50}}, None,
             id="pass sample params as kwargs => success",
