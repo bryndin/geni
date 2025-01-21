@@ -85,6 +85,9 @@ def test___init__():
                      {"headers": {"Custom-Header": "value"}, "params": {"k": "v"}, "method": "post"},
                      "post", {"Custom-Header": "value"}, {"k": "v"},
                      id="post with headers and params => optional arguments are passed as is"),
+        pytest.param("https://api.com/b", {"params": {"root": {"k": "v"}}},
+                     "get", None, {"root[k]": "v"},
+                     id="post with a dict that needs flattening => flattened dict in params"),
     ]
 )
 def test__call(url, kwargs, expect_method, expect_headers, expect_params):
