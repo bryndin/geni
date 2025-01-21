@@ -5,7 +5,7 @@ import json
 from geni import Geni
 
 
-PROFILES_FILE = "processed_profiles.json"
+PROFILES_FILE = "profiles.json"
 
 
 def fetch_all_profiles(client):
