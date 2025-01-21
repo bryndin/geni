@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+    paths-ignore: ['docs/**', 'examples/**', '*.md']
+  pull_request:
+    paths-ignore: ['docs/**', 'examples/**', '*.md']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.3.0
+        with:
+          python-version: '3.x'
+          cache: pip
+          cache-dependency-path: requirements*/*.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run pytest
+        run: |
+          pytest tests
