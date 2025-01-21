@@ -1,11 +1,17 @@
+from typing import Any
+
 from .internal.caller import Caller
 
 
 class Profile(Caller):
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: str | None = None) -> None:
         super().__init__(api_key=api_key)
 
-    def profile(self, fields=None, guids=None, only_ids=None):
+    def profile(self,
+                fields: list[str] | None = None,
+                guids: list[str] | None = None,
+                only_ids: bool | None = None
+                ) -> dict[str, Any]:
         """
         Returns information about a profile.
         """
@@ -19,7 +25,7 @@ class Profile(Caller):
         response = self._call(url, params=params)
         return response.json()
 
-    def delete(self, guids):
+    def delete(self, guids: list[str]) -> dict[str, str]:
         """
         Deletes a profile.
         """
@@ -29,10 +35,25 @@ class Profile(Caller):
         response = self._call(url, params=params, method="post")
         return response.json()
 
-    def update_basics(self, guid, about_me=None, baptism=None, birth=None, burial=None, cause_of_death=None,
-                              death=None, display_name=None, first_name=None, gender=None, is_alive=None,
-                              last_name=None, maiden_name=None, middle_name=None, names=None, nicknames=None,
-                              suffix=None, title=None):
+    def update_basics(self, guid,
+                      about_me: str | None = None,
+                      baptism: dict[str, Any] | None = None,
+                      birth: dict[str, Any] | None = None,
+                      burial: dict[str, Any] | None = None,
+                      cause_of_death: str | None = None,
+                      death: dict[str, Any] | None = None,
+                      display_name: str | None = None,
+                      first_name: str | None = None,
+                      gender: str | None = None,
+                      is_alive: bool | None = None,
+                      last_name: str | None = None,
+                      maiden_name: str | None = None,
+                      middle_name: str | None = None,
+                      names: dict[str, Any] | None = None,
+                      nicknames: list[str] | None = None,
+                      suffix: str | None = None,
+                      title: str | None = None,
+                      ) -> dict[str, Any]:
         """
         Updates basic profile information for a specific profile on Geni.
 

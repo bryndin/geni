@@ -1,11 +1,13 @@
+from typing import Any
+
 from .internal.caller import Caller
 
 
 class Stats(Caller):
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: str | None = None):
         super().__init__(api_key=api_key)
 
-    def stats(self):
+    def stats(self) -> dict[str, dict[str, Any]]:
         """
          Returns information about the site.
 
@@ -19,7 +21,7 @@ class Stats(Caller):
         response = self._call(url)
         return response.json()
 
-    def world_family_tree(self):
+    def world_family_tree(self) -> dict[str, Any]:
         """
          Returns info about the world family tree.
 

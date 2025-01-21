@@ -1,11 +1,17 @@
+from typing import Any
+
 from .internal.caller import Caller
 
 
 class User(Caller):
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: str | None = None):
         super().__init__(api_key=api_key)
 
-    def managed_profiles(self, fields=None, page=None, per_page=None):
+    def managed_profiles(self,
+                         fields: list[str] | None = None,
+                         page: int | None = None,
+                         per_page: int | None = None
+                         ) -> dict[str, Any]:
         """
         Returns a list of profiles the user manages.
 
