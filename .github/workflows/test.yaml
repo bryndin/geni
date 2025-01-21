@@ -2,20 +2,21 @@ name: Test
 
 on:
   push:
-    branches: [master]
-    paths-ignore: ['docs/**', 'examples/**', '*.md']
+    paths:
+      - '**.py'
   pull_request:
-    paths-ignore: ['docs/**', 'examples/**', '*.md']
+    paths:
+      - '**.py'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
           cache: pip
