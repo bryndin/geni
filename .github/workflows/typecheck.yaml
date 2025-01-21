@@ -25,4 +25,4 @@ jobs:
           use-black: false
           use-mypy: true
           use-isort: false
-          extra-mypy-options: "geni/ tests/"
+          extra-mypy-options: "./geni/ ./tests/"
