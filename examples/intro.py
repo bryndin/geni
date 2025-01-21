@@ -34,7 +34,7 @@ from geni import Stats
 # API classes can be used directly, instead of instantiating the whole client.
 # This approach is not recommended, unless you stick to using only one class,
 # as the rate limiter won't be shared.
-stats = Stats("<INSERT YOUR API KEY HERE>") # or just `Stats()` is API key is used
+stats = Stats("<INSERT YOUR API KEY HERE>")  # or just `Stats()` is API key is used
 # the format is: <API class>.<method>
 resp = stats.stats()
 print(resp)
