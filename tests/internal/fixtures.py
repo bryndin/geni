@@ -1,11 +1,12 @@
 import json
+from typing import Any
 
 import requests
 
-dummyResponse = requests.Response()
-dummyResponse._content = json.dumps("content").encode("utf-8")
+dummyResponse: requests.Response = requests.Response()
+dummyResponse._content  = json.dumps("content").encode("utf-8")
 
-noneProfile = {
+noneProfile: dict[str, None] = {
     "about_me": None,
     "baptism": None,
     "birth": None,
@@ -25,7 +26,7 @@ noneProfile = {
     "title": None,
 }
 
-sampleProfile = {
+sampleProfile: dict[str, Any] = {
     "about_me": "one of us",
     "baptism": {"date": "2000-01-01", "location": "St. Peter's Church, NYC"},
     "birth": {"date": "1985-05-15", "location": "San Francisco, CA"},
