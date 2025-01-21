@@ -1,0 +1,22 @@
+name: Lint
+
+on:
+  push:
+    branches: [master]
+    paths-ignore: ['docs/**', 'examples/**', '*.md']
+  pull_request:
+    paths-ignore: ['docs/**', 'examples/**', '*.md']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linter: [flake8, pylint, ruff, mypy, pytype, pyright, fixit, pyre]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - uses: advanced-security/python-lint-code-scanning-action@v1
+        with:
+          linter: ${{ matrix.linter }}
