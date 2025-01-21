@@ -4,8 +4,20 @@ import json
 
 from geni import Geni
 
-
 PROFILES_FILE = "profiles.json"
+
+
+def load_profiles(input_file):
+    with (open(input_file, "r") as f):
+        profiles = json.load(f)
+        print(f"Loaded {len(profiles)} profile IDs from {input_file}")
+        return profiles
+
+
+def save_profiles(profiles, output_file):
+    with open(output_file, "w") as f:
+        json.dump(profiles, f, indent=4)
+    print(f"Saved {len(profiles)} profile IDs to {output_file}")
 
 
 def fetch_all_profiles(client):
@@ -30,6 +42,4 @@ def fetch_all_profiles(client):
 if __name__ == "__main__":
     client = Geni()  # API key is stored in the api key file
     profiles = fetch_all_profiles(client)
-    with open(PROFILES_FILE, "w") as f:
-        f.write(json.dumps(profiles))
-        print(f"Saved {len(profiles)} profiles to {PROFILES_FILE}")
+    save_profiles(profiles, PROFILES_FILE)

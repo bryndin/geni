@@ -4,20 +4,7 @@ import json
 
 from geni import Geni
 
-from .fetch_all_managed_profiles import fetch_all_profiles, PROFILES_FILE
-
-
-def load_profiles(input_file):
-    with (open(input_file, "r") as f):
-        profiles = json.load(f)
-        print(f"Loaded {len(profiles)} profile IDs from {input_file}")
-        return profiles
-
-
-def save_profiles(profiles, output_file):
-    with open(output_file, "w") as f:
-        json.dump(profiles, f, indent=4)
-    print(f"Saved {len(profiles)} profile IDs to {output_file}")
+from .fetch_all_managed_profiles import fetch_all_profiles, load_profiles, save_profiles, PROFILES_FILE
 
 
 def delete_all_profiles(client, profiles, batch_size=1):
