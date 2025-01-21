@@ -14,7 +14,7 @@ def check_api_method(api_cls, api_method, api_url,
         else:
             mock_call.return_value = mock_returns
 
-        f = getattr(api_cls(api_key=_DUMMY_API_KEY), api_method, None)
+        f = getattr(api_cls(api_key=_DUMMY_API_KEY), api_method)
         assert f is not None, f"class {api_cls} has no method {api_method}, typo in your test?"
 
         if expect_exception:

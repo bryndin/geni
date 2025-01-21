@@ -51,7 +51,7 @@ def test_stats(args, kwargs, mock_returns, mock_raises, expect_response, expect_
         ),
     ],
 )
-def test_stats(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_world_family_tree(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
     check_api_method(
         Stats, "world_family_tree", "https://www.geni.com/api/stats/world-family-tree",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception

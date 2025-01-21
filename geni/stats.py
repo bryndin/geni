@@ -1,5 +1,3 @@
-from typing import Dict, Any
-
 from .internal.caller import Caller
 
 
@@ -7,7 +5,7 @@ class Stats(Caller):
     def __init__(self, api_key=None):
         super().__init__(api_key=api_key)
 
-    def stats(self) -> Dict[str, Any]:
+    def stats(self):
         """
          Returns information about the site.
 
