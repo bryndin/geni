@@ -5,7 +5,7 @@ import json
 from geni import Geni
 
 
-PROCESSED_FILE = "processed_profiles.json"
+PROFILES_FILE = "processed_profiles.json"
 
 
 def fetch_all_profiles(client):
@@ -30,6 +30,6 @@ def fetch_all_profiles(client):
 if __name__ == "__main__":
     client = Geni()  # API key is stored in the api key file
     profiles = fetch_all_profiles(client)
-    with open(PROCESSED_FILE, "w") as f:
+    with open(PROFILES_FILE, "w") as f:
         f.write(json.dumps(profiles))
-        print(f"Saved {len(profiles)} profiles to {PROCESSED_FILE}")
+        print(f"Saved {len(profiles)} profiles to {PROFILES_FILE}")
