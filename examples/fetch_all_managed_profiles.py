@@ -1,6 +1,7 @@
 ### NOTE: Geni API allows 1 request per 10 seconds, max profiles per request is 50.
 ### on a large tree this script may take a few minutes to run.
-import json, logging
+import json
+import logging
 
 from geni import Geni
 

@@ -38,7 +38,7 @@ if __name__ == "__main__":
     client = Geni()  # API key is stored in the api key file
     try:
         profiles = load_profiles(PROFILES_FILE)
-    except:
+    except FileNotFoundError:
         profiles = fetch_all_profiles(client)
         save_profiles(profiles, PROFILES_FILE)
 
