@@ -3,10 +3,12 @@ name: Lint
 on:
   push:
     paths:
-      - '**.py'
+      - "**.py"
+      - "requirements*.txt"
   pull_request:
     paths:
-      - '**.py'
+      - "**.py"
+      - "requirements*.txt"
 
 jobs:
   lint:
