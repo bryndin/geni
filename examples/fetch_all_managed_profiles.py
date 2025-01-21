@@ -1,10 +1,13 @@
 ### NOTE: Geni API allows 1 request per 10 seconds, max profiles per request is 50.
 ### on a large tree this script may take a few minutes to run.
-import json
+import json, logging
 
 from geni import Geni
 
 PROFILES_FILE = "profiles.json"
+
+# Rate limiting events are reported at the INFO level
+logging.basicConfig(level=logging.INFO)
 
 
 def load_profiles(input_file):

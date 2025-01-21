@@ -1,10 +1,13 @@
 ### NOTE: Geni API allows 1 request per 10 seconds,
 ### on a large tree this script may take a few minutes to run.
-import json
+import logging
 
 from geni import Geni
 
-from .fetch_all_managed_profiles import fetch_all_profiles, load_profiles, save_profiles, PROFILES_FILE
+from fetch_all_managed_profiles import fetch_all_profiles, load_profiles, save_profiles, PROFILES_FILE
+
+# Rate limiting events are reported at the INFO level
+logging.basicConfig(level=logging.INFO)
 
 
 def delete_all_profiles(client, profiles, batch_size=1):
