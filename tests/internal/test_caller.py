@@ -1,6 +1,5 @@
 import json
-from collections import deque
-from unittest.mock import Mock, call, patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests

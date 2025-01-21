@@ -1,5 +1,3 @@
-import pytest
-
 from geni.geni import Geni
 from geni.profile import Profile
 from geni.stats import Stats
