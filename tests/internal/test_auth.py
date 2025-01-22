@@ -1,5 +1,3 @@
-import json
-import token
 from unittest.mock import patch, mock_open
 
 import pytest

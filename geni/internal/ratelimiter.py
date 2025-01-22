@@ -2,17 +2,19 @@ from collections import deque
 import logging
 import time
 
+from requests.structures import CaseInsensitiveDict
+
 logger = logging.getLogger(__name__)
 
 
 class RateLimiter:
-    def __init__(self, limit=1, window=10):
-        self.limit = limit
-        self.window = window
-        self.remaining = -1
-        self.queue = deque()
+    def __init__(self, limit: int = 1, window: int = 10) -> None:
+        self.limit: int = limit
+        self.window: int = window
+        self.remaining: int = -1
+        self.queue: deque[float] = deque()
 
-    def wait(self):
+    def wait(self) -> None:
         """
         Sleep until we are allowed to make another request.
         """
@@ -29,7 +31,7 @@ class RateLimiter:
                 logger.info(f"Rate limit reached. Pausing for {dt:.2f} seconds...")
                 time.sleep(dt)
 
-    def update(self, headers):
+    def update(self, headers: CaseInsensitiveDict[str]) -> None:
         """
         Update the rate limit settings based on the instructions from reply headers.
         """
