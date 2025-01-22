@@ -1,7 +1,9 @@
 # Geni: Python Client Library for Geni.com Public REST API
 
-![Test Workflow](https://github.com/bryndin/geni/actions/workflows/test.yaml/badge.svg)
+[![Test](https://github.com/bryndin/geni/actions/workflows/test.yaml/badge.svg)](https://github.com/bryndin/geni/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/gh/bryndin/geni/graph/badge.svg?token=3Z916ZHDMK)](https://codecov.io/gh/bryndin/geni)
+[![Lint](https://github.com/bryndin/geni/actions/workflows/lint.yaml/badge.svg)](https://github.com/bryndin/geni/actions/workflows/lint.yaml)
+[![TypeCheck](https://github.com/bryndin/geni/actions/workflows/typecheck.yaml/badge.svg)](https://github.com/bryndin/geni/actions/workflows/typecheck.yaml)
 
 This library simplifies interaction with the [Geni.com public REST API](https://www.geni.com/platform/developer/index), enabling developers to automate various family tree management tasks or integrate Geni functionality into their Python applications. Specifically, it helps post-process your family tree after importing a GEDCOM file.
 
