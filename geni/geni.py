@@ -4,7 +4,7 @@ from geni.user import User
 
 
 class Geni:
-    def __init__(self, api_key=None):
+    def __init__(self, api_key: str | None = None) -> None:
         """
         Initialize the Geni client.
 
@@ -12,6 +12,6 @@ class Geni:
 
         .. note:: This class is not more than an aggregator for the Geni API classes.
         """
-        self.profile = Profile(api_key=api_key)
-        self.stats = Stats(api_key=api_key)
-        self.user = User(api_key=api_key)
+        self.profile: Profile = Profile(api_key=api_key)
+        self.stats: Stats = Stats(api_key=api_key)
+        self.user: User = User(api_key=api_key)

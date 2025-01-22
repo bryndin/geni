@@ -1,6 +1,8 @@
-import pytest
+from typing import Any
 
 from geni.user import User
+import requests
+import pytest
 
 from tests.internal.fixtures import dummyResponse
 from tests.internal.helper import check_api_method
@@ -37,7 +39,10 @@ from tests.internal.helper import check_api_method
         ),
     ],
 )
-def test_managed_profiles(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_managed_profiles(args: list[Any], kwargs: dict[str, Any],
+                          mock_returns: requests.Response | None, mock_raises: type[Exception] | None,
+                          expect_response: Any, expect_kwargs: dict[str, Any],
+                          expect_exception: type[Exception] | None) -> None:
     check_api_method(
         User, "managed_profiles", "https://www.geni.com/api/user/managed-profiles",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception

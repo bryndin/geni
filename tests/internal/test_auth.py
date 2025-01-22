@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import patch, mock_open
 
 import pytest
@@ -14,24 +15,30 @@ DUMMY_TOKEN = "dummy_token"
 @pytest.mark.parametrize(
     "kwargs, load_return, expect_exception",
     [
-        # pass all kwargs => no load, no exception
-        ({"api_key": DUMMY_API_KEY, "api_file": "mock_api_file", "token_file": "mock_token_file", "save_token": False},
-         None, None),
-        # pass only api_key => no load, no exception
-        ({"api_key": DUMMY_API_KEY}, None, None),
-        # pass only api_file => load, no exception
-        ({"api_file": "mock_api_file"}, DUMMY_API_KEY, None),
-        # use default api_file => load, no exception
-        ({}, DUMMY_API_KEY, None),
-        # don't pass api_key and fail loading key => raise exception
-        ({}, None, AuthError),
+        pytest.param(
+            {
+                "api_key": DUMMY_API_KEY,
+                "api_file": "mock_api_file",
+                "token_file": "mock_token_file",
+                "save_token": False
+            }, None, None,
+            id="pass all kwargs => no load, no exception"),
+        pytest.param({"api_key": DUMMY_API_KEY}, None, None,
+                     id="pass only api_key => no load, no exception"),
+        pytest.param({"api_file": "mock_api_file"}, DUMMY_API_KEY, None,
+                     id="pass only api_file => load, no exception"),
+        pytest.param({}, DUMMY_API_KEY, None,
+                     id="use default api_file => load, no exception"),
+        pytest.param({}, None, AuthError,
+                     id="don't pass api_key and fail loading key => raise exception"),
         # pass empty string as api_key and fail loading key => raise exception
-        ({"api_key": ""}, None, AuthError),
-        # don't pass api_key and load empty string => raise exception
-        ({}, "", AuthError),
+        pytest.param({"api_key": ""}, None, AuthError,
+                     id="pass empty string as api_key and fail loading key => raise exception"),
+        pytest.param({}, "", AuthError,
+                     id="don't pass api_key and load empty string => raise exception"),
     ]
 )
-def test___init__(kwargs, load_return, expect_exception):
+def test___init__(kwargs: dict[str, Any], load_return: str | None, expect_exception: type[Exception] | None) -> None:
     with patch.object(Auth, "_load_secrets") as mock_load_secrets:
         mock_load_secrets.return_value = load_return
 
@@ -67,7 +74,12 @@ def test___init__(kwargs, load_return, expect_exception):
          AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
     ],
 )
-def test_access_token(initial, load, generate, save, expect):
+def test_access_token(
+        initial: AccessToken | None,
+        load: AccessToken | None,
+        generate: AccessToken | None,
+        save: bool,
+        expect: AccessToken) -> None:
     with (patch.object(Auth, "_load") as mock_load, \
           patch.object(Auth, "_generate") as mock_generate, \
           patch.object(Auth, "_save") as mock_save, \
@@ -85,8 +97,7 @@ def test_access_token(initial, load, generate, save, expect):
         token = auth.access_token
 
         assert token == expect.token
-        assert auth._access_token.token == expect.token
-        assert auth._access_token.expires_at == expect.expires_at
+        assert auth._access_token == expect
         if load is not None:
             mock_load.assert_called_once()
         if generate is not None:
@@ -110,7 +121,7 @@ def test_access_token(initial, load, generate, save, expect):
         ("api-key", False, None),
     ]
 )
-def test_load_secrets(file_content, path_exists, expected_api_key):
+def test_load_secrets(file_content: str, path_exists: bool, expected_api_key: str | None) -> None:
     with patch("builtins.open", mock_open(read_data=file_content)) as mocked_file, \
             patch("os.path.exists", return_value=path_exists):
         api_key = Auth._load_secrets("dummy_api_file.cfg")
@@ -133,7 +144,7 @@ def test_load_secrets(file_content, path_exists, expected_api_key):
             id="there is no token => return False"),
     ]
 )
-def test_save(token: AccessToken | None, expect_arg: str, expect_return: bool):
+def test_save(token: AccessToken | None, expect_arg: str, expect_return: bool) -> None:
     auth = Auth(api_key="dummy-api-key")
     auth._access_token = token
 
@@ -162,7 +173,7 @@ def test_save(token: AccessToken | None, expect_arg: str, expect_return: bool):
                      id="missing file => raise exception"),
     ]
 )
-def test_load(file_content, path_exists, expect, expect_exception):
+def test_load(file_content: str, path_exists: bool, expect: AccessToken | None, expect_exception: type[Exception] | None) -> None:
     auth = Auth(api_key="dummy-api-key")
     auth._access_token = None
 
@@ -185,7 +196,7 @@ def test_load(file_content, path_exists, expect, expect_exception):
     [
         # correct url => set access_token and expires_at
         ("https://example.com/oauth/auth_success#access_token%3Dtoken123%26expires_in%3D3600",
-         AccessToken("token123", 3600), None),
+         AccessToken("token123", 3600+1000), None),
         # missing access_token value => raise exception
         ("https://example.com/oauth/auth_success#access_token%3D%26expires_in%3D3600", None, AuthError),
         # missing expires_in value => raise exception
@@ -200,7 +211,7 @@ def test_load(file_content, path_exists, expect, expect_exception):
         ("https://example.com/oauth/failure", None, True),
     ]
 )
-def test_generate(redirect_url, expect, expect_exception):
+def test_generate(redirect_url: str, expect: AccessToken | None, expect_exception: type[Exception] | None) -> None:
     auth = Auth(api_key="dummy-api-key")
 
     with patch("builtins.input", return_value=redirect_url), \
@@ -210,5 +221,4 @@ def test_generate(redirect_url, expect, expect_exception):
                 auth._generate()
         else:
             auth._generate()
-            assert auth._access_token.token == expect.token
-            assert auth._access_token.expires_at == 1000 + expect.expires_at
+            assert auth._access_token == expect

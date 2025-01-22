@@ -1,13 +1,14 @@
-import json
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+from requests.structures import CaseInsensitiveDict
 
 from geni.internal.auth import Auth
 from geni.internal.caller import Caller, flatten_dict, remove_none
 from geni.internal.ratelimiter import RateLimiter
-from tests.internal.fixtures import sampleProfile
+from tests.internal.fixtures import dummyResponse, sampleProfile
 
 
 @pytest.mark.parametrize(
@@ -17,11 +18,11 @@ from tests.internal.fixtures import sampleProfile
         ({"a": None, "b": "c", "d": None}, {"b": "c"}),
     ]
 )
-def test_remove_none(d, expect):
+def test_remove_none(d: dict[Any, Any], expect: dict[Any, Any]) -> None:
     assert remove_none(d) == expect
 
 
-def test_remove_none_returns_a_dict_copy():
+def test_remove_none_returns_a_dict_copy() -> None:
     d = {"a": 1, "b": 2}
     result = remove_none(d)
     d.pop("b")
@@ -53,11 +54,11 @@ def test_remove_none_returns_a_dict_copy():
         }, id="names dict with 'names' as a parent key => flattened dict with 'names' as a parent key"),
     ],
 )
-def test_flatten_dict(d, parent_key, expect):
+def test_flatten_dict(d: dict[Any, Any], parent_key: str, expect: dict[Any, Any]) -> None:
     assert flatten_dict(d, parent_key) == expect
 
 
-def test_flatten_dict_returns_a_dict_copy():
+def test_flatten_dict_returns_a_dict_copy() -> None:
     d = {"key": "value"}
     result = flatten_dict(d)
     d.pop("key")
@@ -65,7 +66,7 @@ def test_flatten_dict_returns_a_dict_copy():
     assert d != result
 
 
-def test___init__():
+def test___init__() -> None:
     caller = Caller(api_key="test_key")
 
     assert isinstance(caller._auth, Auth)
@@ -89,19 +90,13 @@ def test___init__():
                      id="post with a dict that needs flattening => flattened dict in params"),
     ]
 )
-def test__call(url, kwargs, expect_method, expect_headers, expect_params):
-    expected_response = json.dumps("test_response")
-
-    with patch.object(Caller, "_raw_call", return_value=expected_response) as mock___call:
+def test__call(url: str, kwargs: dict[str, Any],
+               expect_method: str, expect_headers: dict[str, str], expect_params: dict[str, Any]) -> None:
+    with patch.object(Caller, "_raw_call", return_value=dummyResponse) as mock___call:
         caller = Caller(api_key="test_key")
-
-        # url = "test_url"
-        # headers = {"test_header": "test_value"}
-        # params = {"p": "v", "none": None, "dict": {"key": "val"}}
-        # method = "test_method"
         response = caller._call(url, **dict(kwargs))
 
-        assert response == expected_response
+        assert response == dummyResponse
         mock___call.assert_called_once_with(url, headers=expect_headers, params=expect_params, method=expect_method)
 
 
@@ -125,9 +120,15 @@ def test__call(url, kwargs, expect_method, expect_headers, expect_params):
                      id="post with headers and params => success"),
     ]
 )
-def test__raw_call(url, kwargs, access_token, expect_method, expect_headers, expect_params):
+def test__raw_call(url: str, kwargs: dict[str, Any],
+                   access_token: str,
+                   expect_method: str, expect_headers: dict[str, str], expect_params: dict[str, Any]) -> None:
     mock_response = requests.Response()
-    mock_response.headers = {"X-API-Rate-Limit": "100"}
+    mock_response.headers = CaseInsensitiveDict({
+        "X-API-Rate-Limit": "100",
+        "X-API-Rate-Remaining": "1",
+        "X-API-Rate-Window": "60",
+    })
 
     mock_access_token = MagicMock(return_value=access_token)
 

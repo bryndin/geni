@@ -1,6 +1,7 @@
-import pytest
+from typing import Any
 
 from geni.profile import Profile
+import pytest
 
 from tests.internal.fixtures import dummyResponse, noneProfile, sampleProfile
 from tests.internal.helper import check_api_method
@@ -37,7 +38,9 @@ from tests.internal.helper import check_api_method
         ),
     ],
 )
-def test_profile(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_profile(args: list[Any], kwargs: dict[str, Any],
+                 mock_returns: Any, mock_raises: type[Exception] | None,
+                 expect_response: Any, expect_kwargs: dict[str, Any], expect_exception: type[Exception] | None) -> None:
     check_api_method(
         Profile, "profile", "https://www.geni.com/api/profile",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception
@@ -63,7 +66,9 @@ def test_profile(args, kwargs, mock_returns, mock_raises, expect_response, expec
         ),
     ],
 )
-def test_delete(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_delete(args: list[Any], kwargs: dict[str, Any],
+                mock_returns: Any, mock_raises: type[Exception] | None,
+                expect_response: Any, expect_kwargs: dict[str, Any], expect_exception: type[Exception] | None) -> None:
     check_api_method(
         Profile, "delete", "https://www.geni.com/api/profile/delete",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception,
@@ -95,7 +100,10 @@ def test_delete(args, kwargs, mock_returns, mock_raises, expect_response, expect
         ),
     ],
 )
-def test_update_basics(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_update_basics(args: list[Any], kwargs: dict[str, Any],
+                       mock_returns: Any, mock_raises: type[Exception] | None,
+                       expect_response: Any, expect_kwargs: dict[str, Any],
+                       expect_exception: type[Exception] | None) -> None:
     check_api_method(
         Profile, "update_basics", "https://www.geni.com/api/profile/update-basics",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception

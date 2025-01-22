@@ -1,6 +1,7 @@
-import pytest
+from typing import Any
 
 from geni.stats import Stats
+import pytest
 
 from tests.internal.fixtures import dummyResponse
 from tests.internal.helper import check_api_method
@@ -25,7 +26,9 @@ from tests.internal.helper import check_api_method
         ),
     ],
 )
-def test_stats(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_stats(args: list[Any], kwargs: dict[str, Any],
+               mock_returns: Any, mock_raises: type[Exception] | None,
+               expect_response: Any, expect_kwargs: dict[str, Any], expect_exception: type[Exception] | None) -> None:
     check_api_method(
         Stats, "stats", "https://www.geni.com/api/stats",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception
@@ -51,7 +54,9 @@ def test_stats(args, kwargs, mock_returns, mock_raises, expect_response, expect_
         ),
     ],
 )
-def test_world_family_tree(args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def test_world_family_tree(args: list[Any], kwargs: dict[str, Any],
+               mock_returns: Any, mock_raises: type[Exception] | None,
+               expect_response: Any, expect_kwargs: dict[str, Any], expect_exception: type[Exception] | None) -> None:
     check_api_method(
         Stats, "world_family_tree", "https://www.geni.com/api/stats/world-family-tree",
         args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception

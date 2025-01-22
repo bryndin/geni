@@ -1,15 +1,17 @@
+from typing import Any
+
 import requests
 
 from geni.internal.auth import Auth
 from geni.internal.ratelimiter import RateLimiter
 
 
-def remove_none(d: dict) -> dict:
+def remove_none(d: dict[Any, Any]) -> dict[Any, Any]:
     """Remove None values from a dictionary."""
     return {k: v for k, v in d.items() if v is not None}
 
 
-def flatten_dict(d: dict, parent_key: str = "") -> dict:
+def flatten_dict(d: dict[Any, Any], parent_key: str = "") -> dict[Any, Any]:
     items = {}
     for k, v in d.items():
         new_key = f"{parent_key}[{k}]" if parent_key else k
@@ -29,8 +31,8 @@ class Caller:
 
     def _call(self,
               url: str,
-              headers: dict | None = None,
-              params: dict | None = None,
+              headers: dict[str, Any] | None = None,
+              params: dict[str, Any] | None = None,
               method: str = "get"
               ) -> requests.Response:
         """
@@ -53,14 +55,14 @@ class Caller:
 
     def _raw_call(self,
                   url: str,
-                  headers: dict | None = None,
-                  params: dict | None = None,
+                  headers: dict[str, Any] | None = None,
+                  params: dict[str, Any] | None = None,
                   method: str = "get"
                   ) -> requests.Response:
         """
         Execute request with auth and ratelimiting.
         """
-        hdrs: dict = headers or {}
+        hdrs = headers or {}
         if self.__HEADER_AUTH not in hdrs:
             hdrs[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
 

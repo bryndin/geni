@@ -4,7 +4,7 @@ from .internal.caller import Caller
 
 
 class User(Caller):
-    def __init__(self, api_key: str | None = None):
+    def __init__(self, api_key: str | None = None) -> None:
         super().__init__(api_key=api_key)
 
     def managed_profiles(self,

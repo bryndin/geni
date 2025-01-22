@@ -35,7 +35,7 @@ class Profile(Caller):
         response = self._call(url, params=params, method="post")
         return response.json()
 
-    def update_basics(self, guid,
+    def update_basics(self, guid: str,
                       about_me: str | None = None,
                       baptism: dict[str, Any] | None = None,
                       birth: dict[str, Any] | None = None,

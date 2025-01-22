@@ -2,11 +2,12 @@ from collections import deque
 from unittest.mock import Mock, call, patch
 
 import pytest
+from requests.structures import CaseInsensitiveDict
 
 from geni.internal.ratelimiter import RateLimiter
 
 
-def test_initialization():
+def test_initialization() -> None:
     rate_limiter = RateLimiter(limit=5, window=60)
 
     assert rate_limiter.limit == 5
@@ -26,7 +27,8 @@ def test_initialization():
         (2, 0, [10, 20, 30], Mock(side_effect=[1, 15, 23]), [9, 5]),
     ],
 )
-def test_wait(limit, remaining, queue, mock_time, expect_sleep_calls):
+def test_wait(limit: int, remaining: int, queue: list[int], mock_time: Mock,
+              expect_sleep_calls: list[int] | None) -> None:
     rate_limiter = RateLimiter(limit=limit, window=60)
     rate_limiter.remaining = remaining
     rate_limiter.queue = deque(queue)
@@ -59,7 +61,9 @@ def test_wait(limit, remaining, queue, mock_time, expect_sleep_calls):
         ),
     ]
 )
-def test_update(headers, limit, window, queue, current_time, expect_limit, expect_remaining, expect_queue):
+def test_update(headers: CaseInsensitiveDict[str],
+                limit: int, window: int, queue: list[int], current_time: float,
+                expect_limit: int, expect_remaining: int, expect_queue: list[int]) -> None:
     with patch("time.time", return_value=current_time) as mock_time, \
             patch("time.sleep"):
         rate_limiter = RateLimiter()

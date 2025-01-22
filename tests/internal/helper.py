@@ -1,13 +1,17 @@
+from typing import Any
 from unittest.mock import patch
 
 import pytest
+import requests
 
 _DUMMY_API_KEY = "dummy_api_key"
 _CALLER_FN = "geni.internal.caller.Caller._call"
 
 
-def check_api_method(api_cls, api_method, api_url,
-                     args, kwargs, mock_returns, mock_raises, expect_response, expect_kwargs, expect_exception):
+def check_api_method(api_cls: type, api_method: str, api_url: str,
+                     args: list[Any], kwargs: dict[str, Any],
+                     mock_returns: requests.Response | None, mock_raises: type[Exception] | None,
+                     expect_response: Any, expect_kwargs: dict[str, Any], expect_exception: type[Exception] | None) -> None:
     with patch(_CALLER_FN) as mock_call:
         if mock_raises:
             mock_call.side_effect = mock_raises
