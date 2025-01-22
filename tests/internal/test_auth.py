@@ -58,20 +58,50 @@ def test___init__(kwargs: dict[str, Any], load_return: str | None, expect_except
 
 
 @pytest.mark.parametrize(
-    "initial, load, generate, save, expect",
+    "initial, load, generate, save, expect, expect_exception",
     [
-        # unexpired token already exists => pass
-        (AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME), None, None, False, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
-        # no previous token exists => load
-        (None, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME), None, False, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
-        # no previous token exists and load fails => generate and don't save
-        (None, None, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME), False, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
-        # expired token => generate and don't save
-        (AccessToken(DUMMY_TOKEN, DUMMY_PAST_TIME), None, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME), False,
-         AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
-        # expired token => generate and save
-        (AccessToken(DUMMY_TOKEN, DUMMY_PAST_TIME), None, AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME), True,
-         AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME)),
+        pytest.param(AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     None,
+                     False,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     id="unexpired token already exists => pass"),
+        pytest.param(None,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     False,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     id="no previous token exists => load"),
+        pytest.param(None,
+                     None,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     False,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     id="no previous token exists and load fails => generate and don't save"),
+        pytest.param(AccessToken(DUMMY_TOKEN, DUMMY_PAST_TIME),
+                     None,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     False,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     id="expired token => generate and don't save"),
+        pytest.param(AccessToken(DUMMY_TOKEN, DUMMY_PAST_TIME),
+                     None,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     True,
+                     AccessToken(DUMMY_TOKEN, DUMMY_FUTURE_TIME),
+                     None,
+                     id="expired token => generate and save"),
+        pytest.param(None,
+                     None,
+                     None,
+                     False,
+                     None,
+                     AuthError,
+                     id="no token and both load and generate fail => raise exception"),
     ],
 )
 def test_access_token(
@@ -79,7 +109,8 @@ def test_access_token(
         load: AccessToken | None,
         generate: AccessToken | None,
         save: bool,
-        expect: AccessToken) -> None:
+        expect: AccessToken,
+        expect_exception: type[Exception] | None) -> None:
     with (patch.object(Auth, "_load") as mock_load, \
           patch.object(Auth, "_generate") as mock_generate, \
           patch.object(Auth, "_save") as mock_save, \
@@ -94,18 +125,23 @@ def test_access_token(
             mock_generate.side_effect = lambda: setattr(auth, "_access_token", generate)
 
         auth._access_token = initial
-        token = auth.access_token
 
-        assert token == expect.token
-        assert auth._access_token == expect
-        if load is not None:
-            mock_load.assert_called_once()
-        if generate is not None:
-            mock_generate.assert_called_once()
-        if save:
-            mock_save.assert_called_once()
+        if expect_exception is not None:
+            with pytest.raises(expect_exception):
+                auth.access_token
         else:
-            mock_save.assert_not_called()
+            token = auth.access_token
+
+            assert token == expect.token
+            assert auth._access_token == expect
+            if load is not None:
+                mock_load.assert_called_once()
+            if generate is not None:
+                mock_generate.assert_called_once()
+            if save:
+                mock_save.assert_called_once()
+            else:
+                mock_save.assert_not_called()
 
 
 @pytest.mark.parametrize(
@@ -173,7 +209,8 @@ def test_save(token: AccessToken | None, expect_arg: str, expect_return: bool) -
                      id="missing file => raise exception"),
     ]
 )
-def test_load(file_content: str, path_exists: bool, expect: AccessToken | None, expect_exception: type[Exception] | None) -> None:
+def test_load(file_content: str, path_exists: bool, expect: AccessToken | None,
+              expect_exception: type[Exception] | None) -> None:
     auth = Auth(api_key="dummy-api-key")
     auth._access_token = None
 
@@ -196,7 +233,7 @@ def test_load(file_content: str, path_exists: bool, expect: AccessToken | None, 
     [
         # correct url => set access_token and expires_at
         ("https://example.com/oauth/auth_success#access_token%3Dtoken123%26expires_in%3D3600",
-         AccessToken("token123", 3600+1000), None),
+         AccessToken("token123", 3600 + 1000), None),
         # missing access_token value => raise exception
         ("https://example.com/oauth/auth_success#access_token%3D%26expires_in%3D3600", None, AuthError),
         # missing expires_in value => raise exception
