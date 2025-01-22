@@ -1,3 +1,4 @@
+from dataclasses import dataclass, asdict
 import json
 import os
 import re
@@ -11,11 +12,19 @@ class AuthError(Exception):
     pass
 
 
-class Auth:
-    _SERIALIZE_ACCESS_TOKEN = "access_token"
-    _SERIALIZE_EXPIRES_AT = "expires_at"
+@dataclass(frozen=True)
+class AccessToken:
+    token: str
+    expires_at: float
 
-    def __init__(self, api_key=None, api_file=API_KEY_FILE, token_file=TOKEN_FILE, save_token=True):
+
+class Auth:
+    def __init__(self,
+                 api_key: str | None = None,
+                 api_file: str = API_KEY_FILE,
+                 token_file: str = TOKEN_FILE,
+                 save_token: bool = True
+                 ) -> None:
         """
         Constructor for Auth.
         
@@ -28,21 +37,17 @@ class Auth:
 
         :raises AuthError: if the API key cannot be obtained
         """
-        self._api_key = api_key
-        self._token_file = token_file
-        self._save_token = save_token
+        self._token_file: str = token_file
+        self._save_token: bool = save_token
 
-        self._access_token = None
-        self._expires_at = None
+        self._access_token: AccessToken | None = None
 
-        if not self._api_key:
-            self._api_key = self._load_secrets(api_file)
-
+        self._api_key: str = api_key or self._load_secrets(api_file) or ""
         if not self._api_key:
             raise AuthError(f"Pass the API key or store it in {api_file}")
 
     @property
-    def access_token(self):
+    def access_token(self) -> str:
         """
         Get the access token.
 
@@ -55,52 +60,63 @@ class Auth:
         if not self._access_token:
             self._load()
 
-        if not self._access_token or not self._expires_at or self._expires_at <= time.time():
+        if not self._access_token or not self._access_token.token or self._access_token.expires_at <= time.time():
             self._generate()
             if self._save_token:
                 self._save()
 
-        return self._access_token
+        if not self._access_token:
+            raise AuthError("Failed to obtain access token")
+
+        return self._access_token.token
 
     @staticmethod
-    def _load_secrets(api_file):
+    def _load_secrets(api_file: str) -> str | None:
         """
         Load API key from a file. 
 
         :param api_file: the file to load the API key from
         :type api_file: str
         :return: the API key
-        :rtype: str
+        :rtype: str | None
         """
         if os.path.exists(api_file):
             with open(api_file, "r") as f:
                 return f.read().strip()
 
-    def _save(self, filename=TOKEN_FILE):
+        return None
+
+    def _save(self) -> bool:
         """
         Save access token time to a file.
-        """
-        with open(filename, "w") as f:
-            json.dump({
-                self._SERIALIZE_ACCESS_TOKEN: self._access_token,
-                self._SERIALIZE_EXPIRES_AT: self._expires_at
-            }, f)
 
-    def _load(self):
+        :return: True if the access token was saved, False otherwise
+        :rtype: bool
+        """
+        if self._access_token is None:
+            return False
+
+        with open(self._token_file, "w") as f:
+            json.dump(asdict(self._access_token), f)
+        return True
+
+    def _load(self) -> None:
         """
         Load access token time from a file.
-        """
-        if os.path.exists(self._token_file):
-            with open(self._token_file, "r") as f:
-                try:
-                    data = json.load(f)
-                    self._access_token = data["access_token"]
-                    self._expires_at = data["expires_at"]
-                except (json.decoder.JSONDecodeError, KeyError):
-                    self._access_token = self._expires_at = None
-                    raise AuthError(f"The access token file {self._token_file} is corrupt. Was it edited manually?")
 
-    def _generate(self):
+        :raises AuthError: if the access token file is corrupt or the file does not exist.
+        """
+        if not os.path.exists(self._token_file):
+            raise AuthError(f"The access token file {self._token_file} does not exist")
+
+        with open(self._token_file, "r") as f:
+            try:
+                data = json.load(f)
+                self._access_token = AccessToken(**data)
+            except (json.decoder.JSONDecodeError, TypeError):
+                raise AuthError(f"The access token file {self._token_file} is corrupt. Was it edited manually?")
+
+    def _generate(self) -> None:
         """
         Generate a new access token.
 
@@ -117,12 +133,14 @@ class Auth:
         print(auth_url)
         redirect_url = input("Paste the redirect URL (from the address bar): ")
 
-        if "oauth/auth_success" in redirect_url:
-            match = re.search(r"access_token%3D(.*)%26expires_in%3D(.*)", redirect_url)
-            if not match or not match.group(1) or not match.group(2) or not match.group(2).isdigit():
-                raise AuthError("Invalid redirect URL. Did you copy one from the address bar?")
-
-            self._access_token = match.group(1)
-            self._expires_at = time.time() + int(match.group(2))
-        else:
+        if "oauth/auth_success" not in redirect_url:
             raise AuthError("Auth failed, possibly rejected by user")
+
+        match = re.search(r"access_token%3D(.*)%26expires_in%3D(.*)", redirect_url)
+        if not match or not match.group(1) or not match.group(2) or not match.group(2).isdigit():
+            raise AuthError("Invalid redirect URL. Did you copy one from the address bar?")
+
+        self._access_token = AccessToken(
+            token=match.group(1),
+            expires_at=time.time() + int(match.group(2))
+        )

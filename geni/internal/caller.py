@@ -4,12 +4,12 @@ from geni.internal.auth import Auth
 from geni.internal.ratelimiter import RateLimiter
 
 
-def remove_none(d):
+def remove_none(d: dict) -> dict:
     """Remove None values from a dictionary."""
     return {k: v for k, v in d.items() if v is not None}
 
 
-def flatten_dict(d, parent_key=""):
+def flatten_dict(d: dict, parent_key: str = "") -> dict:
     items = {}
     for k, v in d.items():
         new_key = f"{parent_key}[{k}]" if parent_key else k
@@ -21,13 +21,18 @@ def flatten_dict(d, parent_key=""):
 
 
 class Caller:
-    __HEADER_AUTH = "Authorization"
+    __HEADER_AUTH: str = "Authorization"
 
-    def __init__(self, api_key=None):
-        self._auth = Auth(api_key)
-        self._ratelimiter = RateLimiter()
+    def __init__(self, api_key: str | None = None) -> None:
+        self._auth: Auth = Auth(api_key)
+        self._ratelimiter: RateLimiter = RateLimiter()
 
-    def _call(self, url, headers=None, params=None, method="get"):
+    def _call(self,
+              url: str,
+              headers: dict | None = None,
+              params: dict | None = None,
+              method: str = "get"
+              ) -> requests.Response:
         """
         Preprocess params before executing request.
         """
@@ -46,16 +51,21 @@ class Caller:
 
         return self._raw_call(url, headers=headers, params=processed_params, method=method)
 
-    def _raw_call(self, url, headers=None, params=None, method="get"):
+    def _raw_call(self,
+                  url: str,
+                  headers: dict | None = None,
+                  params: dict | None = None,
+                  method: str = "get"
+                  ) -> requests.Response:
         """
         Execute request with auth and ratelimiting.
         """
-        headers = headers or {}
-        if self.__HEADER_AUTH not in headers:
-            headers[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
+        hdrs: dict = headers or {}
+        if self.__HEADER_AUTH not in hdrs:
+            hdrs[self.__HEADER_AUTH] = f"Bearer {self._auth.access_token}"
 
         self._ratelimiter.wait()
-        response = requests.request(method, url, headers=headers, params=params)
+        response: requests.Response = requests.request(method, url, headers=hdrs, params=params)
         self._ratelimiter.update(response.headers)
 
         return response
