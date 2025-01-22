@@ -17,12 +17,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - uses: ricardochaves/python-lint@v1.4.0
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          use-pylint: false
-          use-pycodestyle: false
-          use-flake8: false
-          use-black: false
-          use-mypy: true
-          use-isort: false
-          extra-mypy-options: "./geni/ ./tests/"
+          python-version: '3.x'
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run pytest with coverage
+        run: |
+          mypy ./geni/ ./tests/
