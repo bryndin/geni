@@ -3,7 +3,7 @@ from typing import Any
 from geni.stats import Stats
 import pytest
 
-from tests.internal.fixtures import dummyResponse
+from tests.internal.fixtures.response import dummyResponse
 from tests.internal.helper import check_api_method
 
 

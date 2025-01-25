@@ -4,7 +4,7 @@ from geni.user import User
 import requests
 import pytest
 
-from tests.internal.fixtures import dummyResponse
+from tests.internal.fixtures.response import dummyResponse
 from tests.internal.helper import check_api_method
 
 

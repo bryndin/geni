@@ -8,7 +8,8 @@ from requests.structures import CaseInsensitiveDict
 from geni.internal.auth import Auth
 from geni.internal.caller import Caller, flatten_dict, remove_none
 from geni.internal.ratelimiter import RateLimiter
-from tests.internal.fixtures import dummyResponse, sampleProfile
+from tests.internal.fixtures.response import dummyResponse
+from tests.internal.fixtures.profile import sampleParamsUpdateBasics
 
 
 @pytest.mark.parametrize(
@@ -39,18 +40,18 @@ def test_remove_none_returns_a_dict_copy() -> None:
         pytest.param({}, "key", {},
                      id="empty dict with a parent key => empty dict"),
 
-        pytest.param(sampleProfile["names"], "", {
-            "en[first_name]": sampleProfile["names"]["en"]["first_name"],
-            "en[last_name]": sampleProfile["names"]["en"]["last_name"],
-            "es[first_name]": sampleProfile["names"]["es"]["first_name"],
-            "es[last_name]": sampleProfile["names"]["es"]["last_name"],
+        pytest.param(sampleParamsUpdateBasics["names"], "", {
+            "en[first_name]": sampleParamsUpdateBasics["names"]["en"]["first_name"],
+            "en[last_name]": sampleParamsUpdateBasics["names"]["en"]["last_name"],
+            "es[first_name]": sampleParamsUpdateBasics["names"]["es"]["first_name"],
+            "es[last_name]": sampleParamsUpdateBasics["names"]["es"]["last_name"],
         }, id="names dict with no parent key => flattened dict"),
 
-        pytest.param(sampleProfile["names"], "names", {
-            "names[en][first_name]": sampleProfile["names"]["en"]["first_name"],
-            "names[en][last_name]": sampleProfile["names"]["en"]["last_name"],
-            "names[es][first_name]": sampleProfile["names"]["es"]["first_name"],
-            "names[es][last_name]": sampleProfile["names"]["es"]["last_name"],
+        pytest.param(sampleParamsUpdateBasics["names"], "names", {
+            "names[en][first_name]": sampleParamsUpdateBasics["names"]["en"]["first_name"],
+            "names[en][last_name]": sampleParamsUpdateBasics["names"]["en"]["last_name"],
+            "names[es][first_name]": sampleParamsUpdateBasics["names"]["es"]["first_name"],
+            "names[es][last_name]": sampleParamsUpdateBasics["names"]["es"]["last_name"],
         }, id="names dict with 'names' as a parent key => flattened dict with 'names' as a parent key"),
     ],
 )
