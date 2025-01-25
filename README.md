@@ -51,16 +51,17 @@ To interact with the Geni API, you need to authenticate using OAuth 2.0. Follow 
     - or pass your API key as a parameter during the library initialization.
 4. During the first run, you will be prompted to authorize your application:
    1. In the terminal window the library will give you the URL to Geni Auth page
-    ```
-    Visit this URL to authorize the application:
-    https://www.geni.com/platform/oauth/authorize?client_id=XXXXXXXX&response_type=token&display=desktop
-    Paste the redirect URL (from the address bar):
-    ```
-   2. Open it in any browser and authorize your application in Geni.
-    ![Geni Auth Page Screenshot](./docs/_static/auth_ask.png)
-   3. After authorization, Geni will redirect you to a "Not Found" page. This is expected behavior. Copy the entire URL from the browser address bar and paste it in the terminal.
-    ![Geni Redirect URL Location Screenshot](./docs/_static/auth_redirect_url.png)
+       ```
+       Visit this URL to authorize the application:
+       https://www.geni.com/platform/oauth/authorize?client_id=XXXXXXXX&response_type=token&display=desktop
+       Paste the redirect URL (from the address bar):
+       ```
+   2. Open it in any browser and authorize your application in Geni.<br>
+       ![Geni Auth Page Screenshot](./docs/_static/auth_ask.png)
+   3. After authorization, Geni will redirect you to a "Not Found" page. This is expected behavior. Copy the entire URL from the browser address bar and paste it in the terminal.<br>
+       ![Geni Redirect URL Location Screenshot](./docs/_static/auth_redirect_url.png)
    4. The library will extract the access token from that redirected URL and save it to a temporary file `geni_token.tmp`.
+
 5. Each subsequent request will use the access token from the temporary file, until the token expires or the file is manually removed.
 6. If the access token is expired, the library will ask you to re-authenticate before continuing with the request (expiration time is also stored in the temporary file).
 
