@@ -26,6 +26,10 @@ The library currently supports the following methods:
 
 * **Profile**
   - [profile](https://www.geni.com/platform/developer/help/api?path=profile): Returns information about a profile. 
+  - [add-child](https://www.geni.com/platform/developer/help/api?path=profile%252Fadd-child): Add a child to a profile and return the added profile.
+  - [add-parent](https://www.geni.com/platform/developer/help/api?path=profile%252Fadd-parent): Add a parent to a profile and return the added profile.
+  - [add-partner](https://www.geni.com/platform/developer/help/api?path=profile%252Fadd-partner): Add a partner to a profile and return the added profile.
+  - [add-sibling](https://www.geni.com/platform/developer/help/api?path=profile%252Fadd-sibling): Add a sibling to a profile and return the added profile.
   - [delete](https://www.geni.com/platform/developer/help/api?path=profile%2Fdelete): Deletes a profile.
   - [update_basics](https://www.geni.com/platform/developer/help/api?path=profile%2Fupdate-basics): Update fields on the basics and about tabs and return the changed profile. Parameters can be posted as form data or JSON.
 * **Stats**
