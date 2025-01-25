@@ -378,6 +378,11 @@ class Profile(Caller):
     def delete(self, guids: list[str]) -> dict[str, str]:
         """
         Deletes a profile.
+
+        :param guids: list of str
+            The GUIDs of the profiles to delete (required).
+        :return: dict
+            The response from the API containing the deleted profile GUIDs.
         """
         url = "https://www.geni.com/api/profile/delete"
         params = {"guids": guids}
