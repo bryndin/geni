@@ -99,7 +99,7 @@ class Profile(Caller):
         :return: dict
             The response from the API containing the added child's profile information.
         """
-        url = f"https://www.geni.com/api/profile/add-child"
+        url = "https://www.geni.com/api/profile/add-child"
         params = self._shared_params(
             about_me=about_me, baptism=baptism, birth=birth, burial=burial, death=death, display_name=display_name,
             divorce=divorce, email=email, first_name=first_name, gender=gender, is_alive=is_alive,
@@ -187,7 +187,7 @@ class Profile(Caller):
         :return: dict
             The response from the API containing the added parent's profile information.
         """
-        url = f"https://www.geni.com/api/profile/add-parent"
+        url = "https://www.geni.com/api/profile/add-parent"
         params = self._shared_params(
             about_me=about_me, baptism=baptism, birth=birth, burial=burial, death=death, display_name=display_name,
             divorce=divorce, email=email, first_name=first_name, gender=gender, is_alive=is_alive,
@@ -275,7 +275,7 @@ class Profile(Caller):
         :return: dict
             The response from the API containing the added partner's profile information.
         """
-        url = f"https://www.geni.com/api/profile/add-partner"
+        url = "https://www.geni.com/api/profile/add-partner"
         params = self._shared_params(
             about_me=about_me, baptism=baptism, birth=birth, burial=burial, death=death, display_name=display_name,
             divorce=divorce, email=email, first_name=first_name, gender=gender, is_alive=is_alive,
@@ -363,7 +363,7 @@ class Profile(Caller):
         :return: dict
             The response from the API containing the added sibling's profile information.
         """
-        url = f"https://www.geni.com/api/profile/add-sibling"
+        url = "https://www.geni.com/api/profile/add-sibling"
         params = self._shared_params(
             about_me=about_me, baptism=baptism, birth=birth, burial=burial, death=death, display_name=display_name,
             divorce=divorce, email=email, first_name=first_name, gender=gender, is_alive=is_alive,
