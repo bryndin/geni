@@ -21,6 +21,9 @@ Use the following command to install the library directly from GitHub:
 pip install git+https://github.com/bryndin/geni.git
 ```
 
+## Usage Examples
+See the [examples](./examples) directory.
+
 ## Implemented Methods
 The library currently supports the following methods:
 
