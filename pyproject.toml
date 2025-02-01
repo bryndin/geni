@@ -30,10 +30,7 @@ dev = ["pytest>=8.3.4"]
 Homepage = "https://github.com/bryndin/geni"
 
 [tool.setuptools]
-packages = ["geni"]
+packages = ["geni", "geni.internal", "tests", "tests.internal", "tests.internal.fixtures", "examples"]
 
 [tool.setuptools.dynamic]
 version = { attr = "geni.version.__version__" }
-
-[tool.setuptools.exclude-package-data]
-"*" = ["test*", "examples*"]
