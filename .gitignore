@@ -11,7 +11,8 @@ processed_profiles.json
 *.pyo
 *.pyd
 
-# lib egg
+# Packaging
+dist/
 *.egg-info
 
 # Cache files
