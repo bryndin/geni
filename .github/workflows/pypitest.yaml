@@ -8,9 +8,6 @@ on:
 jobs:
   pypi-publish:
     runs-on: ubuntu-latest
-    environment:
-      name: pypitest
-      url: https://test.pypi.org/p/geniapi
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
