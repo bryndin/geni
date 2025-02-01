@@ -1,3 +1,2 @@
 requests==2.32.3
-transliterate==1.10.2
 types-requests==2.32.0.20241016
