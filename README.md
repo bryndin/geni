@@ -16,7 +16,10 @@ This library simplifies interaction with the [Geni.com public REST API](https://
 - Provides examples for common use cases.
 
 ## Installation
-Use the following command to install the library directly from GitHub:
+```bash
+pip install geniapi
+```
+or directly from GitHub:
 ```bash
 pip install git+https://github.com/bryndin/geni.git
 ```
