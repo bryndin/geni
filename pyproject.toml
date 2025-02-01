@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "geni"
+name = "geniapi"
 dynamic = ["version"]
 dependencies = [
     "requests>=2.28.0",
