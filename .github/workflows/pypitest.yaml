@@ -8,7 +8,9 @@ on:
 jobs:
   pypi-publish:
     runs-on: ubuntu-latest
-    environment: pypitest
+    environment:
+      name: pypitest
+      url: https://test.pypi.org/p/geniapi
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
@@ -36,4 +38,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-#          password: ${{ secrets.TEST_PYPI_PASSWORD }}
